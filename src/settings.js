@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '孤小夜',
+  title: '孤小夜人力资源后台管理',
 
   /**
    * @type {boolean} true | false

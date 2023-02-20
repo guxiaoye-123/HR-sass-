@@ -18,3 +18,13 @@ export const getInfo = token => {
 export const logout = () => {
 
 }
+/**
+ * 获取用户基本资料
+ */
+export const getUserInfo = () => {
+  // 返回一个promise对象
+  return request({
+    url: ' /sys/profile',
+    method: 'POST'
+  })
+}

@@ -1,7 +1,7 @@
 // 权限拦截在路由跳转 导航守卫
 import router from '@/router'
 import store from '@/store' // 引入 store实例 和组件中的this.$store是一回事
-import nProgress from 'nprogress' // 引入进度条
+import nprogress from 'nprogress' // 引入进度条
 import 'nprogress/nprogress.css' // 引入进度条样式
 // 不需要导出，只需要执行即可
 
@@ -12,7 +12,7 @@ import 'nprogress/nprogress.css' // 引入进度条样式
 // next(地址) 跳转到某个地址
 const whiteList = ['/login', '/404'] // 定义白名单
 router.beforeEach(async(to, from, next) => {
-  nProgress.start()
+  nprogress.start()
   if (store.getters.token) {
     // 如果有token
     if (to.path === '/login') {
@@ -21,9 +21,9 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // 只有放过的时候才去获取用户资料
       // 如果vuex中有用户的id就不用获取资料，如果没有就获取资料
-      if (!store.getters.userId) {
-        await store.dispatch('user/getUserInfo')
-      }
+      // if (!store.getters.userId) {
+      //   await store.dispatch('user/getUserInfo')
+      // }
       next()
     }
   } else {
@@ -37,5 +37,5 @@ router.beforeEach(async(to, from, next) => {
 })
 // 后置守卫
 router.afterEach(() => {
-  nProgress.done() // 关闭进度条
+  nprogress.done() // 关闭进度条
 })

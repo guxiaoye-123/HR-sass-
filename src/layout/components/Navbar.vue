@@ -2,7 +2,7 @@
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
     <div class="app-breadcrumb">
-      江苏传智播客教育科技股份有限公司
+      孤咲夜管理后台
       <span class="breadBtn">体验版</span>
     </div>
     <!-- <breadcrumb class="breadcrumb-container" /> -->
@@ -10,8 +10,8 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="@/assets/common/bigUserHeader.png" class="user-avatar">
-          <span class="name">{{ name }}}</span>
+          <img v-imageerror="defaultImg" :src="staffPhoto" class="user-avatar">
+          <span class="name">{{ name }}</span>
           <i class="el-icon-caret-bottom" style="color: #fff" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -42,11 +42,16 @@ export default {
     // Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      defaultImg: require('@/assets/common/head.jpg')
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar',
-      'name'
+      'name',
+      'staffPhoto'
     ])
   },
   methods: {
@@ -54,8 +59,8 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      await this.$store.dispatch('user/logout') // 无论写不写async await 都是同步登出
+      this.$router.push(`/login`)
     }
   }
 }

@@ -1,4 +1,4 @@
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 // 状态
 const state = {
@@ -29,8 +29,10 @@ const mutations = {
 const actions = {
   async login(context, data) {
     // 调用api接口
-    const res = await login(data)
-    context.commit('setToken', res)
+    const res = await login(data) // 拿到token
+    context.commit('setToken', res) // 设置token
+    // 拿到token说明登录成功
+    setTimeStamp() // 设置当前
   },
   async getUserInfo(context) {
     const res = await getUserInfo()
@@ -38,6 +40,13 @@ const actions = {
     const baseInfo = await getUserDetailById(res.userId)
     context.commit('setUserInfo', { ...res, ...baseInfo }) // 提交到mutations
     return res // 后期做权限，现在无用
+  },
+  // 登出操作
+  logout(context) {
+    // 删除token
+    context.commit('removeToken')
+    // 删除用户资料
+    context.commit('removeUserInfo')
   }
 }
 export default {

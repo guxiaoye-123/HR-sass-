@@ -1,5 +1,5 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login, getUserInfo } from '@/api/user'
+import { login, getUserInfo, getUserDetailById } from '@/api/user'
 // 状态
 const state = {
   token: getToken(), // 设置token为共享状态
@@ -34,7 +34,9 @@ const actions = {
   },
   async getUserInfo(context) {
     const res = await getUserInfo()
-    context.commit('setUserInfo', res) // 提交到mutations
+    // 获取用户详情
+    const baseInfo = await getUserDetailById(res.userId)
+    context.commit('setUserInfo', { ...res, ...baseInfo }) // 提交到mutations
     return res // 后期做权限，现在无用
   }
 }

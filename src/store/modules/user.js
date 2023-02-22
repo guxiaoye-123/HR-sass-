@@ -32,7 +32,7 @@ const actions = {
     const res = await login(data) // 拿到token
     context.commit('setToken', res) // 设置token
     // 拿到token说明登录成功
-    setTimeStamp() // 设置当前
+    setTimeStamp() // 设置当前的时间戳
   },
   async getUserInfo(context) {
     const res = await getUserInfo()

@@ -37,6 +37,7 @@
 
 <script>
 // 该组件需要对外开放属性 外部需要提供一个对象 对象里需要有name  manager
+import { delDepartments } from '@/api/departments'
 export default {
   // props可以用数组来接收数据 也可以用对象来接收
   // props: {   props属性: {  配置选项 }  }
@@ -51,19 +52,29 @@ export default {
       default: false
     }
   },
+  // created() {
+  //   this.delDepartment()
+  // },
   methods: {
     operateDepts(type) {
     // 点击添加 编辑 删除 子部门时
       if (type === 'add') {
         // 添加子部门
+        this.$emit('addDepts', this.treeNode)
       } else if (type === 'edit') {
         // 编辑子部门
       } else {
         // 删除子部门
-        alert('触发删除')
+        this.$confirm('是否确认删除').then(() => {
+          return delDepartments(this.treeNode.id)
+        }).then(() => {
+          this.$emit('delDepts')
+          this.$message.success('删除部门成功')
+        })
       }
     }
   }
+
 }
 </script>
 

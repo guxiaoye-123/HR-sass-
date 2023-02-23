@@ -7,6 +7,7 @@
         <tree-tools
           :tree-node="company"
           :is-root="true"
+          @addDepts="addDepts"
         />
         <!-- 放置一个tree -->
         <el-tree
@@ -18,10 +19,13 @@
           <tree-tools
             slot-scope="{ data }"
             :tree-node="data"
+            @delDepts="getDepartments"
+            @addDepts="addDepts"
           />
         </el-tree>
       </el-card>
     </div>
+    <addDept :show-dialog="showDialog" />
   </div>
 </template>
 
@@ -29,9 +33,11 @@
 import TreeTools from './components/tree-tools'
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils/index'
+import addDept from './components/add-dept'
 export default {
   components: {
-    TreeTools
+    TreeTools,
+    addDept
   },
   data() {
     return {
@@ -39,7 +45,9 @@ export default {
       defaultProps: {
         label: 'name'
       },
-      departs: []
+      departs: [],
+      showDialog: false,
+      node: null // 记录当前点击的节点
     }
   },
   created() {
@@ -48,9 +56,14 @@ export default {
   methods: {
     async getDepartments() {
       const res = await getDepartments()
-      console.log(res)
       this.company = { name: res.companyName, manager: '负责人' }
       this.departs = tranListToTreeData(res.depts, '')
+    },
+    // 监听tree-tools中触发的点击添加子部门事件
+    addDepts(node) {
+      this.showDialog = true
+      this.node = node
+      console.log(this.node)
     }
   }
 }

@@ -56,7 +56,7 @@ export default {
   methods: {
     async getDepartments() {
       const res = await getDepartments()
-      this.company = { name: res.companyName, manager: '负责人' }
+      this.company = { name: res.companyName, manager: '负责人', id: '' }
       this.departs = tranListToTreeData(res.depts, '')
     },
     // 监听tree-tools中触发的点击添加子部门事件

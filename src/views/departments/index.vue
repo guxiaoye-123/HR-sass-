@@ -26,7 +26,7 @@
         </el-tree>
       </el-card>
     </div>
-    <addDept :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
+    <addDept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
   </div>
 </template>
 
@@ -68,6 +68,10 @@ export default {
     editDepts(node) {
       this.showDialog = true
       this.node = node
+      this.$refs.addDept.getDepartDetail(node.id)
+      console.log(this.$refs.addDept.getDepartDetail(node.id))
+      console.log('编辑时node 所存数据', node)
+      console.log('测试编辑所掉的值', this.$refs.addDept)
     }
   }
 }

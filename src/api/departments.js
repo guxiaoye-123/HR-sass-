@@ -32,3 +32,25 @@ export const addDepartments = data => {
     data
   })
 }
+
+/** *
+ * 获取某个部门详情
+ * ***/
+
+export const getDepartDetail = id => {
+  return request({
+    url: `/company/department/${id}`
+  })
+}
+
+/** *
+ * 保存编辑的数据
+ * ***/
+
+export const updateDepartments = data => {
+  return request({
+    url: `/company/department/${data.id}`,
+    method: 'PUT',
+    data
+  })
+}

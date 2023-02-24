@@ -1,7 +1,7 @@
 <template>
   <!-- 放置弹层组件 -->
   <el-dialog
-    title="新增部门"
+    :title="showTitle"
     :visible="showDialog"
     @close="btnCancel"
   >
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartDetail, updateDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -117,6 +117,11 @@ export default {
       peoples: []
     }
   },
+  computed: {
+    showTitle() {
+      return this.formData.id ? ' 编辑部门' : '新增部门'
+    }
+  },
   methods: {
     async getEmployeeSimple() {
       this.peoples = await getEmployeeSimple()
@@ -125,9 +130,14 @@ export default {
       // 手动校验表单
       this.$refs.deptForm.validate(async isOk => {
         if (isOk) {
-          // 如果表单校验通过
+          if (this.formData.id) {
+            // 编辑
+            await updateDepartments(this.formData)
+          } else {
+            // 如果表单校验通过
           // 将ID 设置为pid
-          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+            await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          }
           this.$emit('addDepts')
           // 此时去修改 showDialog
           this.$emit('update:showDialog', false)
@@ -135,8 +145,20 @@ export default {
       })
     },
     btnCancel() {
+      this.formData = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
       this.$refs.deptForm.resetFields()
       this.$emit('update:showDialog', false)
+    },
+    // 获取详情方法
+    async getDepartDetail(id) {
+      this.formData = await getDepartDetail(id)
+      // 因为父组件调用子组件的方法 先设置node 数据 直接调用方法
+      // props 传值是异步的
     }
   }
 }

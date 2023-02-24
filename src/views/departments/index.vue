@@ -63,7 +63,6 @@ export default {
     addDepts(node) {
       this.showDialog = true
       this.node = node
-      console.log(this.node)
     }
   }
 }

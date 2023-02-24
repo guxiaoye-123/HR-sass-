@@ -20,12 +20,13 @@
             slot-scope="{ data }"
             :tree-node="data"
             @delDepts="getDepartments"
+            @editDepts="editDepts"
             @addDepts="addDepts"
           />
         </el-tree>
       </el-card>
     </div>
-    <addDept :show-dialog="showDialog" :tree-node="node" />
+    <addDept :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
   </div>
 </template>
 
@@ -46,7 +47,7 @@ export default {
         label: 'name'
       },
       departs: [],
-      showDialog: false,
+      showDialog: false, // 控制弹层显示
       node: null // 记录当前点击的节点
     }
   },
@@ -61,6 +62,10 @@ export default {
     },
     // 监听tree-tools中触发的点击添加子部门事件
     addDepts(node) {
+      this.showDialog = true
+      this.node = node
+    },
+    editDepts(node) {
       this.showDialog = true
       this.node = node
     }

@@ -21,9 +21,9 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // 只有放过的时候才去获取用户资料
       // 如果vuex中有用户的id就不用获取资料，如果没有就获取资料
-      // if (!store.getters.userId) {
-      //   await store.dispatch('user/getUserInfo')
-      // }
+      if (!store.getters.userId) {
+        await store.dispatch('user/getUserInfo')
+      }
       next()
     }
   } else {

@@ -77,17 +77,30 @@ export default {
     // 检查部门名称是否重复
     const checkNameRepeat = async(rule, value, callback) => {
       // value 是部门名称 要去同级下的部门去比较 ，有没有相同的 不可以过 / 不相同的可以过
+      let isRepeat = false
       const { depts } = await getDepartments()
       // 去找同级部门下 有没有和value相同的数据
       // 找到所有的子部门
-      const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      if (this.formData.id) {
+        // 有id为编辑模式
+        isRepeat = depts.filter(item => item.id !== this.formData.id && item.pid === this.treeNode.pid).some(item => item.name === value)
+      } else {
+        // 没有id 就为新增模式
+        isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      }
       // 如果isRepeat 为true 表示找到了一样的名字
       isRepeat ? callback(new Error(`同级部门下已经存在${value}部门了`)) : callback()
     }
     const checkCodeRepeat = async(rule, value, callback) => {
       const { depts } = await getDepartments()
       // 要求编码和所有部门的编码不能重复 由于历史数据可能没有code 所以这里加一个强制性条件 value不为空
-      const isRepeat = depts.some(item => item.code === value && value)
+      let isRepeat = false
+      if (this.formData.id) {
+        // 编辑模式  因为编辑模式下 不能算自己
+        isRepeat = depts.some(item => item.id !== this.formData.id && item.code === value && value)
+      } else {
+        isRepeat = depts.some(item => item.code === value && value)
+      }
       isRepeat ? callback(new Error(`同级部门下已经存在${value}部门了`)) : callback()
     }
     return {

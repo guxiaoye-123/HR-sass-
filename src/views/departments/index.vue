@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div :loading="loading" class="dashboard-container">
     <div class="app-container">
       <!-- 组织架构内容 -->
       <el-card class="tree-card">
@@ -48,7 +48,8 @@ export default {
       },
       departs: [],
       showDialog: false, // 控制弹层显示
-      node: null // 记录当前点击的节点
+      node: null, // 记录当前点击的节点
+      loading: false
     }
   },
   created() {
@@ -56,9 +57,11 @@ export default {
   },
   methods: {
     async getDepartments() {
+      this.loading = true
       const res = await getDepartments()
       this.company = { name: res.companyName, manager: '负责人', id: '' }
       this.departs = tranListToTreeData(res.depts, '')
+      this.loading = false
     },
     // 监听tree-tools中触发的点击添加子部门事件
     addDepts(node) {

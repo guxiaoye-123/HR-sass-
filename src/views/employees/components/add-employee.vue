@@ -2,9 +2,11 @@
   <el-dialog
     title="新增员工"
     :visible="showDialog"
+    @close="btnCancle"
   >
     <!-- 表单 -->
     <el-form
+      ref="addEmployee"
       :model="formData"
       :rules="rules"
       label-width="120px"
@@ -91,10 +93,11 @@
         justify="center"
       >
         <el-col :span="6">
-          <el-button size="small">取消</el-button>
+          <el-button size="small" @click="btnCancle">取消</el-button>
           <el-button
             type="primary"
             size="small"
+            @click="btnOK"
           >确定</el-button>
         </el-col>
       </el-row>
@@ -106,6 +109,7 @@
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils'
 import EmployeeEnum from '@/api/constant/employees'
+import { addEmployee } from '@/api/employees'
 export default {
   props: {
     showDialog: {
@@ -128,7 +132,7 @@ export default {
       },
       rules: {
         username: [{ required: true, message: '用户姓名不能为空', trigger: 'blur' }, { min: 1, max: 5, message: '用户姓名为1-5位' }],
-        mobile: [{ required: true, message: '手机号不能为空', trigger: 'blur' }, { pattern: /^1[3-9]\的$/, message: '手机号格式不正确', trigger: 'blur' }],
+        mobile: [{ required: true, message: '手机号不能为空', trigger: 'blur' }, { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }],
         formOfEmployment: [{ required: true, message: '聘用形式不能为空', trigger: 'blur' }],
         workNumber: [{ required: true, message: '工号不能为空', trigger: 'blur' }],
         departmentName: [{ required: true, message: '部门不能为空', trigger: 'change' }],
@@ -151,6 +155,32 @@ export default {
     selectNode(node) {
       this.formData.departmentName = node.name
       this.showTree = false
+    },
+    async btnOK() {
+      try {
+        // 校验表单
+        await this.$refs.addEmployee.validate()
+        // 校验成功
+        await addEmployee(this.formData) // 调用新增接口
+        // 通知父组件更新数据
+        this.$parent.getEmployeeList && this.$parent.getEmployeeList()
+        this.$parent.showDialog = false
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    btnCancle() {
+      this.formData = {
+        username: '',
+        mobile: '',
+        formOfEmployment: '',
+        workNumber: '',
+        departmentName: '',
+        timeOfEntry: '',
+        correctionTime: ''
+      }
+      this.$refs.addEmployee.resetFields() // 移除之前的校验
+      this.$emit('update:showDialog', false) // 'update:props' 这样写 可以直接父组件用sync处理
     }
   }
 }

@@ -9,6 +9,7 @@
           <el-button
             type="primary"
             size="small"
+            @click="$router.push('/import')"
           >Excel 导入</el-button>
           <el-button
             type="primary"

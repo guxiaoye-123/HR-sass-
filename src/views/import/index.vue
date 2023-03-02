@@ -8,7 +8,6 @@ import { importEmployee } from '@/api/employees'
 export default {
   methods: {
     async success({ header, results }) {
-      debugger
       // header的数据为中文,results的数据也为中文
       // 新增员工的属性一致
       const userRelations = {
@@ -28,8 +27,12 @@ export default {
       //   arr.push(userInfo)
       // })
       const newArr = results.map(item => {
+        console.log(item)
+        console.log('2', Object.keys(item))
         var userInfo = {}
         Object.keys(item).forEach(key => {
+          console.log('3', key)
+          console.log('4', userRelations[key])
           if (userRelations[key] === 'timeOfEntry' || userRelations[key] === 'correctionTime') {
             // 后端限制 必须转化
             userInfo[userRelations[key]] = new Date(this.formatDate(item[key], '/')) // 只有这样才会存入数据库
@@ -37,6 +40,7 @@ export default {
             // key为中文
             userInfo[userRelations[key]] = item[key]
           }
+          console.log('5', userInfo)
         })
         return userInfo
       })
